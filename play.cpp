@@ -16,73 +16,26 @@
 #include "FileWvIn.h"
 #include "RtAudio.h"
 
+#include "mainwindow.h"
+#include "audioplayer.h"
 #include <vector>
 #include <signal.h>
 #include <iostream>
 #include <cstdlib>
 #include <cmath>
-
-using namespace std;
-using namespace stk;
-
-// Eewww ... global variables! :-)
-bool done;
-StkFrames frames;
-static void finish(int ignore){ done = true; }
-int delayMilliseconds = 500;
-int delaySamples = delayMilliseconds * 44.1; 
-float decayCoef = 0.2f;
-
-void usage(void) {
-    // Error function in case of incorrect command-line
-    // argument specifications.
-    std::cout << "\nuseage: play file sr <rate>\n";
-    std::cout << "    where file = the file to play,\n";
-    std::cout << "    where sr = sample rate,\n";
-    std::cout << "    and rate = an optional playback rate.\n";
-    std::cout << "               (default = 1.0, can be negative)\n\n";
-    exit( 0 );
-}
-vector<StkFloat> samplesIn, samplesOut;
-int ind;
-// This tick() function handles sample computation only.  It will be
-// called automatically when the system needs a new buffer of audio
-// samples.
-int tick( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
-        double streamTime, RtAudioStreamStatus status, void *userData )
-{
-    FileWvIn *input = (FileWvIn *) userData;
-    register StkFloat *samples = (StkFloat *) outputBuffer;
-
-    input->tick( frames );
-
-    for (int i = 0; i < frames.size(); i++) {
-        samplesIn.push_back(frames[i]);
-        samplesOut.push_back(frames[i]);
-    }
-
-    for ( unsigned int i=0; i<frames.size(); i++ ) {
-        if (ind + i >= delaySamples)
-            samplesOut[ind + i] += decayCoef * samplesOut[ind + i - delaySamples]; 
-    }
-
-    for (int i= 0; i < frames.size(); i++) {
-        samples[i] = samplesOut[ind + i];
-    }
-    samples += frames.size();
-    ind += frames.size();
-
-    if ( input->isFinished() ) {
-        done = true;
-        return 1;
-    }
-    else
-        return 0;
-}
+#include <QApplication>
+#include <QtWidgets>
 
 int main(int argc, char *argv[])
 {
+    QApplication app(argc, argv);
+    MainWindow window;
+    auto instance = AudioPlayer::getInstance;
+    instance()->setSampleRate(44100);
+    instance()->loadSong("/Users/ajercaianu/Fac/PS/proiect/ring.wav");
+    window.show();
     // Minimal command-line checking.
+    /*
     if ( argc < 3 || argc > 4 ) usage();
 
     // Set the global sample rate before creating class instances.
@@ -154,5 +107,6 @@ int main(int argc, char *argv[])
     }
 
 cleanup:
-    return 0;
+*/
+    return app.exec();
 }
