@@ -48,10 +48,12 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = audioplayer.cpp \
+SOURCES       = delayeffect.cpp \
+		audioplayer.cpp \
 		mainwindow.cpp \
 		play.cpp moc_mainwindow.cpp
-OBJECTS       = audioplayer.o \
+OBJECTS       = delayeffect.o \
+		audioplayer.o \
 		mainwindow.o \
 		play.o \
 		moc_mainwindow.o
@@ -195,8 +197,10 @@ DIST          = /usr/local/Cellar/qt55/5.5.1/mkspecs/features/spec_pre.prf \
 		/usr/local/Cellar/qt55/5.5.1/mkspecs/features/exceptions.prf \
 		/usr/local/Cellar/qt55/5.5.1/mkspecs/features/yacc.prf \
 		/usr/local/Cellar/qt55/5.5.1/mkspecs/features/lex.prf \
-		musicplayer.pro audioplayer.h \
-		mainwindow.h audioplayer.cpp \
+		musicplayer.pro delayeffect.h \
+		audioplayer.h \
+		mainwindow.h delayeffect.cpp \
+		audioplayer.cpp \
 		mainwindow.cpp \
 		play.cpp
 QMAKE_TARGET  = musicplayer
@@ -559,8 +563,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents audioplayer.h mainwindow.h $(DISTDIR)/
-	$(COPY_FILE) --parents audioplayer.cpp mainwindow.cpp play.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents delayeffect.h audioplayer.h mainwindow.h $(DISTDIR)/
+	$(COPY_FILE) --parents delayeffect.cpp audioplayer.cpp mainwindow.cpp play.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -610,12 +614,22 @@ compiler_clean: compiler_moc_header_clean
 
 ####### Compile
 
+delayeffect.o: delayeffect.cpp ../stk/include/FileWvIn.h \
+		../stk/include/WvIn.h \
+		../stk/include/Stk.h \
+		../stk/include/FileRead.h \
+		../stk/include/RtAudio.h \
+		audioplayer.h \
+		delayeffect.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o delayeffect.o delayeffect.cpp
+
 audioplayer.o: audioplayer.cpp ../stk/include/FileWvIn.h \
 		../stk/include/WvIn.h \
 		../stk/include/Stk.h \
 		../stk/include/FileRead.h \
 		../stk/include/RtAudio.h \
-		audioplayer.h
+		audioplayer.h \
+		delayeffect.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o audioplayer.o audioplayer.cpp
 
 mainwindow.o: mainwindow.cpp mainwindow.h \
@@ -627,6 +641,7 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		../stk/include/Stk.h \
 		../stk/include/FileRead.h \
 		../stk/include/RtAudio.h \
+		delayeffect.h \
 		/usr/local/Cellar/qt55/5.5.1/lib/QtWidgets.framework/Headers/QPushButton \
 		/usr/local/Cellar/qt55/5.5.1/lib/QtWidgets.framework/Headers/qpushbutton.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o mainwindow.cpp
@@ -640,6 +655,7 @@ play.o: play.cpp ../stk/include/FileWvIn.h \
 		/usr/local/Cellar/qt55/5.5.1/lib/QtWidgets.framework/Headers/QWidget \
 		/usr/local/Cellar/qt55/5.5.1/lib/QtWidgets.framework/Headers/qwidget.h \
 		audioplayer.h \
+		delayeffect.h \
 		/usr/local/Cellar/qt55/5.5.1/lib/QtWidgets.framework/Headers/QApplication \
 		/usr/local/Cellar/qt55/5.5.1/lib/QtWidgets.framework/Headers/qapplication.h \
 		/usr/local/Cellar/qt55/5.5.1/lib/QtWidgets.framework/Headers/QtWidgets \

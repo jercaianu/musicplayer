@@ -2,6 +2,7 @@
 #include "FileWvIn.h"
 #include "RtAudio.h"
 #include "audioplayer.h"
+#include "delayeffect.h"
 
 #include <vector>
 #include <signal.h>
@@ -37,18 +38,23 @@ int AudioPlayer::tick( void *outputBuffer, void *inputBuffer, unsigned int nBuff
     auto& samplesOut = inst()->samplesOut;
     auto& ind = inst()->ind;
     auto& done = inst()->done;
+    auto& effect = inst()->effect;
 
     input->tick( frames );
-
     for (int i = 0; i < frames.size(); i++) {
         samplesIn.push_back(frames[i]);
         samplesOut.push_back(frames[i]);
     }
 
+    effect.applyEffect(samplesOut, ind, ind + frames.size());
+
+    /*
     for ( unsigned int i=0; i<frames.size(); i++ ) {
         if (ind + i >= delaySamples)
             samplesOut[ind + i] += decayCoef * samplesOut[ind + i - delaySamples]; 
     }
+
+    */
 
     for (int i= 0; i < frames.size(); i++) {
         samples[i] = samplesOut[ind + i];
@@ -56,6 +62,7 @@ int AudioPlayer::tick( void *outputBuffer, void *inputBuffer, unsigned int nBuff
     samples += frames.size();
     ind += frames.size();
 
+    
     if ( input->isFinished() ) {
         done = true;
         return 1;
@@ -66,13 +73,15 @@ int AudioPlayer::tick( void *outputBuffer, void *inputBuffer, unsigned int nBuff
 
 void AudioPlayer::loadSong(string filename)
 {
-    input.openFile(filename);
-    rate = input.getFileRate() / Stk::sampleRate();
-    input.setRate(rate);
-    input.ignoreSampleRateChange();
-    channels = input.channelsOut();
-
+    initInput.openFile(filename);
+    rate = initInput.getFileRate() / Stk::sampleRate();
+    initInput.setRate(rate);
+    initInput.ignoreSampleRateChange();
+    channels = initInput.channelsOut();
+    samplesIn.clear();
+    samplesOut.clear();
     // Figure out how many bytes in an StkFloat and setup the RtAudio stream.
+    openStream();
 }
 
 void AudioPlayer::openStream() 
@@ -80,8 +89,7 @@ void AudioPlayer::openStream()
     bufferFrames = RT_BUFFER_SIZE;
     frames = StkFrames();
     frames.resize(bufferFrames, channels);
-    samplesIn.clear();
-    samplesOut.clear();
+    input = initInput;
     parameters.deviceId = dac.getDefaultOutputDevice();
     parameters.nChannels = (channels == 1) ? 2 : channels; //  Play mono files as stereo.
     
@@ -98,12 +106,10 @@ void AudioPlayer::setSampleRate(StkFloat sampleRate)
 
 void AudioPlayer::play()
 {
-    openStream();
     dac.startStream();
 }
 
 void AudioPlayer::stop()
 {
-    dac.closeStream();
-    dac = RtAudio();
+    dac.stopStream();  
 }

@@ -4,6 +4,7 @@
 #include <string>
 #include "FileWvIn.h"
 #include "RtAudio.h"
+#include "delayeffect.h"
 
 #include <vector>
 #include <signal.h>
@@ -21,9 +22,11 @@ private:
 	static AudioPlayer* instance;
 
 public:
+	DelayEffect effect;
 	vector<StkFloat> samplesIn;
 	vector<StkFloat> samplesOut;
 	RtAudio dac;
+	FileWvIn initInput;
     FileWvIn input;
     StkFrames frames;
     StkFloat sampleRate;
