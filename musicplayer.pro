@@ -9,8 +9,8 @@ LIBS = Release/* -lpthread -framework CoreAudio -framework CoreFoundation -frame
 DEFINES += HAVE_GETTIMEOFDAY __MACOSX_CORE__ __LITTLE_ENDIAN__
 QMAKE_CXXFLAGS += -O3
 CONFIG += c++11 warn_off
-HEADERS = delayeffect.h audioplayer.h mainwindow.h
+HEADERS = effect.h phasereffect.h delayeffect.h audioplayer.h mainwindow.h
 QT += widgets
 
 # Input
-SOURCES += delayeffect.cpp audioplayer.cpp mainwindow.cpp play.cpp
+SOURCES += phasereffect.cpp delayeffect.cpp audioplayer.cpp mainwindow.cpp play.cpp

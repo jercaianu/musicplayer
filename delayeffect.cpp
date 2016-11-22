@@ -15,11 +15,13 @@ using namespace stk;
 
 void DelayEffect::applyEffect(vector<StkFloat>& samples, int start, int end)
 {
-	auto tmpSamples = samples;
+	int kChannels = 2;
 	int delaySamples = delaySamplesCoef * delayMilliseconds;
-    for (int i = start; i < end; i++) {
-        if (i >= delaySamples)
-            samples[i] += decayCoef * samples[i - delaySamples]; 
+    for (int i = start; i < end; i += kChannels) {
+        if (i >= 2 * delaySamples) {
+            samples[i] += decayCoef * samples[i - 2 * delaySamples];
+            samples[i + 1] += decayCoef * samples[i + 1 - 2 * delaySamples];
+        }
     }
 
 }

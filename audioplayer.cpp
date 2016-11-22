@@ -3,6 +3,7 @@
 #include "RtAudio.h"
 #include "audioplayer.h"
 #include "delayeffect.h"
+#include "phasereffect.h"
 
 #include <vector>
 #include <signal.h>
@@ -22,6 +23,7 @@ AudioPlayer* AudioPlayer::instance = nullptr;
 
 AudioPlayer::AudioPlayer() 
 {
+    //effect = new DelayEffect();
     format = (sizeof(StkFloat) == 8) ? RTAUDIO_FLOAT64 : RTAUDIO_FLOAT32;
     ind = 0;
 }

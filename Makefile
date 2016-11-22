@@ -48,11 +48,13 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = delayeffect.cpp \
+SOURCES       = phasereffect.cpp \
+		delayeffect.cpp \
 		audioplayer.cpp \
 		mainwindow.cpp \
 		play.cpp moc_mainwindow.cpp
-OBJECTS       = delayeffect.o \
+OBJECTS       = phasereffect.o \
+		delayeffect.o \
 		audioplayer.o \
 		mainwindow.o \
 		play.o \
@@ -197,9 +199,12 @@ DIST          = /usr/local/Cellar/qt55/5.5.1/mkspecs/features/spec_pre.prf \
 		/usr/local/Cellar/qt55/5.5.1/mkspecs/features/exceptions.prf \
 		/usr/local/Cellar/qt55/5.5.1/mkspecs/features/yacc.prf \
 		/usr/local/Cellar/qt55/5.5.1/mkspecs/features/lex.prf \
-		musicplayer.pro delayeffect.h \
+		musicplayer.pro effect.h \
+		phasereffect.h \
+		delayeffect.h \
 		audioplayer.h \
-		mainwindow.h delayeffect.cpp \
+		mainwindow.h phasereffect.cpp \
+		delayeffect.cpp \
 		audioplayer.cpp \
 		mainwindow.cpp \
 		play.cpp
@@ -563,8 +568,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents delayeffect.h audioplayer.h mainwindow.h $(DISTDIR)/
-	$(COPY_FILE) --parents delayeffect.cpp audioplayer.cpp mainwindow.cpp play.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents effect.h phasereffect.h delayeffect.h audioplayer.h mainwindow.h $(DISTDIR)/
+	$(COPY_FILE) --parents phasereffect.cpp delayeffect.cpp audioplayer.cpp mainwindow.cpp play.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -614,13 +619,26 @@ compiler_clean: compiler_moc_header_clean
 
 ####### Compile
 
+phasereffect.o: phasereffect.cpp ../stk/include/FileWvIn.h \
+		../stk/include/WvIn.h \
+		../stk/include/Stk.h \
+		../stk/include/FileRead.h \
+		../stk/include/RtAudio.h \
+		audioplayer.h \
+		delayeffect.h \
+		effect.h \
+		phasereffect.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o phasereffect.o phasereffect.cpp
+
 delayeffect.o: delayeffect.cpp ../stk/include/FileWvIn.h \
 		../stk/include/WvIn.h \
 		../stk/include/Stk.h \
 		../stk/include/FileRead.h \
 		../stk/include/RtAudio.h \
 		audioplayer.h \
-		delayeffect.h
+		delayeffect.h \
+		effect.h \
+		phasereffect.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o delayeffect.o delayeffect.cpp
 
 audioplayer.o: audioplayer.cpp ../stk/include/FileWvIn.h \
@@ -629,7 +647,9 @@ audioplayer.o: audioplayer.cpp ../stk/include/FileWvIn.h \
 		../stk/include/FileRead.h \
 		../stk/include/RtAudio.h \
 		audioplayer.h \
-		delayeffect.h
+		delayeffect.h \
+		effect.h \
+		phasereffect.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o audioplayer.o audioplayer.cpp
 
 mainwindow.o: mainwindow.cpp mainwindow.h \
@@ -642,6 +662,8 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		../stk/include/FileRead.h \
 		../stk/include/RtAudio.h \
 		delayeffect.h \
+		effect.h \
+		phasereffect.h \
 		/usr/local/Cellar/qt55/5.5.1/lib/QtWidgets.framework/Headers/QPushButton \
 		/usr/local/Cellar/qt55/5.5.1/lib/QtWidgets.framework/Headers/qpushbutton.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o mainwindow.cpp
@@ -656,6 +678,8 @@ play.o: play.cpp ../stk/include/FileWvIn.h \
 		/usr/local/Cellar/qt55/5.5.1/lib/QtWidgets.framework/Headers/qwidget.h \
 		audioplayer.h \
 		delayeffect.h \
+		effect.h \
+		phasereffect.h \
 		/usr/local/Cellar/qt55/5.5.1/lib/QtWidgets.framework/Headers/QApplication \
 		/usr/local/Cellar/qt55/5.5.1/lib/QtWidgets.framework/Headers/qapplication.h \
 		/usr/local/Cellar/qt55/5.5.1/lib/QtWidgets.framework/Headers/QtWidgets \

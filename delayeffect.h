@@ -5,6 +5,7 @@
 #include "FileWvIn.h"
 #include "RtAudio.h"
 #include "audioplayer.h"
+#include "effect.h"
 
 #include <vector>
 #include <signal.h>
@@ -15,7 +16,8 @@
 using namespace std;
 using namespace stk;
 
-class DelayEffect
+
+class DelayEffect : public Effect
 {
 public:
 	float delayMilliseconds;
