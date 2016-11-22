@@ -23,7 +23,8 @@ private:
 	static AudioPlayer* instance;
 
 public:
-	PhaserEffect effect;
+	PhaserEffect phaserEffect;
+	DelayEffect delayEffect;
 	vector<StkFloat> samplesIn;
 	vector<StkFloat> samplesOut;
 	RtAudio dac;
@@ -38,6 +39,7 @@ public:
     int channels;
     bool done;
     int ind;
+    int currentEffect;
     static int tick(void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
         double streamTime, RtAudioStreamStatus status, void *userData);
 

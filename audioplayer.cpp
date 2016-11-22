@@ -26,6 +26,7 @@ AudioPlayer::AudioPlayer()
     //effect = new DelayEffect();
     format = (sizeof(StkFloat) == 8) ? RTAUDIO_FLOAT64 : RTAUDIO_FLOAT32;
     ind = 0;
+    currentEffect = 0;
 }
 
 int AudioPlayer::tick( void *outputBuffer, void *inputBuffer, unsigned int nBufferFrames,
@@ -40,7 +41,7 @@ int AudioPlayer::tick( void *outputBuffer, void *inputBuffer, unsigned int nBuff
     auto& samplesOut = inst()->samplesOut;
     auto& ind = inst()->ind;
     auto& done = inst()->done;
-    auto& effect = inst()->effect;
+    auto& currentEffect = inst()->currentEffect;
 
     input->tick( frames );
     for (int i = 0; i < frames.size(); i++) {
@@ -48,8 +49,10 @@ int AudioPlayer::tick( void *outputBuffer, void *inputBuffer, unsigned int nBuff
         samplesOut.push_back(frames[i]);
     }
 
-    effect.applyEffect(samplesOut, ind, ind + frames.size());
-
+    if (currentEffect & 1)
+        inst()->phaserEffect.applyEffect(samplesOut, ind, ind + frames.size());
+    if (currentEffect & 2)
+        inst()->delayEffect.applyEffect(samplesOut, ind, ind + frames.size());
     /*
     for ( unsigned int i=0; i<frames.size(); i++ ) {
         if (ind + i >= delaySamples)
