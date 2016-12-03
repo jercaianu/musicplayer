@@ -38,7 +38,7 @@ public:
 	PhaserState state;
 
 	PhaserEffect() : 
-		freq(2.0), depth(0.5), feedback(0.1), range(0.5), stages(8)
+		freq(1.5), depth(0.75), feedback(0.1), range(0.5), stages(4)
 	{
 		state.leftPhase = 0;
 		state.rightPhase = 0;
