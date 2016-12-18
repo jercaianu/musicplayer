@@ -1,7 +1,6 @@
 #include <string>
 #include "FileWvIn.h"
 #include "RtAudio.h"
-#include "audioplayer.h"
 #include "delayeffect.h"
 
 #include <vector>
@@ -23,5 +22,20 @@ void DelayEffect::applyEffect(vector<StkFloat>& samples, int start, int end)
             samples[i + 1] += decayCoef * samples[i + 1 - 2 * delaySamples];
         }
     }
+}
 
+void DelayEffect::connectSliders()
+{
+	connect(delayDecay, SIGNAL(valueChanged(int)), this, SLOT(setDecay(int)));
+	connect(delayTimeDelay, SIGNAL(valueChanged(int)), this, SLOT(setTimeDelay(int)));
+}
+
+void DelayEffect::setDecay(int val) 
+{
+	decayCoef = (float)val / 1000;
+}
+
+void DelayEffect::setTimeDelay(int val)
+{
+	delayMilliseconds = (float)val;
 }

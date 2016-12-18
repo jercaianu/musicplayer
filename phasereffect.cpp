@@ -1,7 +1,6 @@
 #include <string>
 #include "FileWvIn.h"
 #include "RtAudio.h"
-#include "audioplayer.h"
 #include "phasereffect.h"
 
 #include <vector>
@@ -60,5 +59,13 @@ void PhaserEffect::applyEffect(vector<StkFloat>& samples, int start, int end)
     	samples[i] = samples[i] * (1.0 - 0.5 * depth) + left * depth * 0.5;
     	samples[i + 1] = samples[i + 1] * (1.0 - 0.5 * depth) + right * depth * 0.5;
     }
+}
 
+void PhaserEffect::connectSliders()
+{
+	connect(phaserLFO, SIGNAL(valueChanged(int)), this, SLOT(setFreq(int)));
+	connect(phaserDepth, SIGNAL(valueChanged(int)), this, SLOT(setDepth(int)));
+	connect(phaserRange, SIGNAL(valueChanged(int)), this, SLOT(setRange(int)));
+	connect(phaserStages, SIGNAL(valueChanged(int)), this, SLOT(setStages(int)));
+	connect(phaserFeedback, SIGNAL(valueChanged(int)), this, SLOT(setFeedback(int)));
 }

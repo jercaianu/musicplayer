@@ -118,3 +118,20 @@ void AudioPlayer::stop()
 {
     dac.stopStream();  
 }
+
+void AudioPlayer::setupDelayEffect(QSlider* delayDecay, QSlider* delayTimeDelay)
+{
+    delayEffect.delayDecay = delayDecay;
+    delayEffect.delayTimeDelay = delayTimeDelay;
+}
+
+void AudioPlayer::setupPhaserEffect(
+    QSlider* phaserStages, QSlider* phaserFeedback, QSlider* phaserLFO, 
+    QSlider* phaserRange, QSlider* phaserDepth)
+{
+    phaserEffect.phaserStages = phaserStages;
+    phaserEffect.phaserFeedback = phaserFeedback;
+    phaserEffect.phaserLFO = phaserLFO;
+    phaserEffect.phaserRange = phaserRange;
+    phaserEffect.phaserDepth = phaserDepth;
+}

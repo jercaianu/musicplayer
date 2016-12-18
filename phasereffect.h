@@ -4,8 +4,7 @@
 #include <string>
 #include "FileWvIn.h"
 #include "RtAudio.h"
-#include "audioplayer.h"
-#include "effect.h"
+#include "mainwindow.h"
 
 #include <vector>
 #include <signal.h>
@@ -27,8 +26,9 @@ struct PhaserState {
 	StkFloat oldOutRight[MAXSTAGES];
 };
 
-class PhaserEffect : public Effect
+class PhaserEffect : public QObject
 {
+	Q_OBJECT
 public:
 	StkFloat freq;
 	StkFloat depth;
@@ -37,7 +37,13 @@ public:
 	int stages;
 	PhaserState state;
 
-	PhaserEffect() : 
+	QSlider* phaserStages;
+	QSlider* phaserFeedback;
+	QSlider* phaserLFO;
+	QSlider* phaserRange;
+	QSlider* phaserDepth;
+
+	PhaserEffect(QObject *parent = 0) : 
 		freq(1.5), depth(0.75), feedback(0.1), range(0.5), stages(4)
 	{
 		state.leftPhase = 0;
@@ -58,5 +64,27 @@ public:
 	}
 
 	void applyEffect(vector<StkFloat>& samples, int start, int end);
+	void connectSliders();
+
+public slots:
+	void setFreq(int val) {
+		freq = (float)val / 100;
+	}
+
+	void setDepth(int val) {
+		depth = (float)val / 100;
+	}
+
+	void setFeedback(int val) {
+		feedback = (float)val / 100;
+	}
+
+	void setRange(int val) {
+		range = (float)val / 100;
+	}
+
+	void setStages(int val) {
+		stages = val;
+	}
 };
 #endif

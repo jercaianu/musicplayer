@@ -4,6 +4,7 @@
 #include <string>
 #include "FileWvIn.h"
 #include "RtAudio.h"
+#include "mainwindow.h"
 #include "delayeffect.h"
 #include "phasereffect.h"
 
@@ -34,6 +35,8 @@ public:
     StkFloat sampleRate;
     RtAudioFormat format;
     RtAudio::StreamParameters parameters;
+    QSlider* delayDecay;
+    QSlider* delayTimeDelay;
     unsigned int bufferFrames;
     double rate;
     int channels;
@@ -53,6 +56,9 @@ public:
     	return instance;
 	}
 
+	void setupDelayEffect(QSlider* delayDecay, QSlider* delayTimeDelay);
+	void setupPhaserEffect(QSlider* phaserStages, QSlider* phaserFeedback, QSlider* phaserLFO, 
+						   QSlider* phaserRange, QSlider* phaserDepth);
 	void loadSong(string filename);
 	void openStream();
 	void play();
