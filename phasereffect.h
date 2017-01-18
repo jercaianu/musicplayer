@@ -20,10 +20,10 @@ using namespace stk;
 struct PhaserState {
 	StkFloat leftPhase;
 	StkFloat rightPhase;
-	StkFloat oldInLeft[MAXSTAGES];
-	StkFloat oldInRight[MAXSTAGES];
-	StkFloat oldOutLeft[MAXSTAGES];
-	StkFloat oldOutRight[MAXSTAGES];
+	StkFloat oldInLeft[MAXSTAGES] = {};
+	StkFloat oldInRight[MAXSTAGES] = {};
+	StkFloat oldOutLeft[MAXSTAGES] = {};
+	StkFloat oldOutRight[MAXSTAGES] = {};
 };
 
 class PhaserEffect : public QObject
